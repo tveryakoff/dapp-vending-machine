@@ -28,7 +28,7 @@ export default function VendingMachine() {
 
   const handleSetDonatBalance = useCallback(async () => {
     try {
-      const result = await vendingMachineContract.methods.getVendingMachineBalance().call()
+      const result = await vendingMachineContract.getMachineDonatAmount()
       setVendingMachineDonatBalance(result)
     } catch (e) {
       console.log('e', e)
