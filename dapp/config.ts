@@ -3,7 +3,7 @@ dotenv.config();
 
 const { NEXT_PUBLIC_PROVIDER_URL, NEXT_PUBLIC_CONTRACT_ADDRESS } = process.env
 
-export const PROVIDER_URL = 'http://127.0.0.1:8545'
-export const CONTRACT_ADDRESS = '0xE619550ccDAC95b978A01a98DE116DD3993Ad0F8'
+export const PROVIDER_URL = 'https://sepolia.infura.io/v3/7a9e6e202a464b599ae545ce148341e9'
+export const CONTRACT_ADDRESS = '0x31f967877453F4910593C3bfDB1703FAE8679940'
 
 

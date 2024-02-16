@@ -1,19 +1,17 @@
 'use client'
 
-import Web3 from 'web3'
-
 import { useCallback, useEffect, useState } from 'react'
 import vendingMachineContract from '../../blockchain/vendingMachine'
 import Container from '../components/atoms/Container'
-import { Button, Card, InputNumber } from 'antd'
+import { Button, InputNumber } from 'antd'
 import Image from 'next/image'
-
-const { Meta } = Card
+import { useWallet } from '../hooks/useWallet'
 
 export default function VendingMachine() {
-  const [web3, setWeb3] = useState<Web3<any>>(null)
   const [amount, setAmount] = useState(0)
   const [vendingMachineDonatBalance, setVendingMachineDonatBalance] = useState(0)
+  const { accounts } = useWallet()
+  const [isPurchaseProcessing, setIsPurchaseProcessing] = useState(false)
 
   useEffect(() => {
     handleSetDonatBalance()
@@ -34,6 +32,12 @@ export default function VendingMachine() {
       console.log('e', e)
     }
   }, [setVendingMachineDonatBalance])
+
+  const handlePurchase = useCallback(async () => {
+    setIsPurchaseProcessing(true)
+    await vendingMachineContract.purchase(accounts[0], amount)
+    setIsPurchaseProcessing(false)
+  }, [accounts, amount])
 
   return (
     <Container className="lg:max-w-[50%] mt-16">
@@ -62,7 +66,14 @@ export default function VendingMachine() {
             +
           </Button>
         </div>
-        <Button className="mt-4" size="large" type="primary">
+        <Button
+          className="mt-4"
+          size="large"
+          type="primary"
+          loading={isPurchaseProcessing}
+          disabled={amount === 0}
+          onClick={handlePurchase}
+        >
           Purchase
         </Button>
       </div>

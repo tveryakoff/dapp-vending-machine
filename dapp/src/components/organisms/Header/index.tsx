@@ -2,7 +2,6 @@ import { Avatar, Badge, Button, Layout } from 'antd'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { useWallet } from '../../../hooks/useWallet'
 import vendingMachineContract from '../../../../blockchain/vendingMachine'
-import Image from 'next/image'
 
 const { Header: HeaderAntd } = Layout
 
