@@ -1,31 +1,17 @@
 'use client'
 
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { useCallback, useContext, useState } from 'react'
 import Container from '../components/atoms/Container'
 import { Button, InputNumber } from 'antd'
 import Image from 'next/image'
-import { useVendingMachineContract } from '../hooks/useVendingMachineContract'
+import { useMachineDonatAmount, usePurchase } from '../blockchain/vendingMachine/queries'
 import { Web3Context } from '../providers/Web3Provider'
 
 export default function VendingMachine() {
   const [amount, setAmount] = useState(0)
-  const [vendingMachineDonatBalance, setVendingMachineDonatBalance] = useState(0)
+  const { mutate: purchase, isPending: isPurchaseProcessing } = usePurchase()
   const { accounts } = useContext(Web3Context)
-  const [isPurchaseProcessing, setIsPurchaseProcessing] = useState(false)
-  const vendingMachineContract = useVendingMachineContract()
-
-  const handleSetDonatBalance = useCallback(async () => {
-    try {
-      const result = await vendingMachineContract.getMachineDonatAmount()
-      setVendingMachineDonatBalance(result as number)
-    } catch (e) {
-      console.log('e', e)
-    }
-  }, [setVendingMachineDonatBalance, vendingMachineContract])
-
-  useEffect(() => {
-    handleSetDonatBalance()
-  }, [handleSetDonatBalance])
+  const { data } = useMachineDonatAmount()
 
   const onChange = useCallback(
     (value: number) => {
@@ -34,15 +20,9 @@ export default function VendingMachine() {
     [setAmount],
   )
 
-  const handlePurchase = useCallback(async () => {
-    try {
-      setIsPurchaseProcessing(true)
-      await vendingMachineContract.purchase(accounts[0], amount)
-      setIsPurchaseProcessing(false)
-    } catch (e) {
-      setIsPurchaseProcessing(false)
-    }
-  }, [accounts, amount])
+  const handlePurchase = useCallback(() => {
+    purchase({ address: accounts[0], amount })
+  }, [accounts, amount, purchase])
 
   return (
     <Container className="lg:max-w-[50%] mt-16">
@@ -51,7 +31,7 @@ export default function VendingMachine() {
       </div>
       <div className="flex flex-col justify-end mx-auto lg:max-w-[50%]">
         <h2>
-          Donuts supply: <span className="text-pink-500">{vendingMachineDonatBalance}</span>
+          Donuts supply: <span className="text-pink-500">{data}</span>
         </h2>
         <div className="flex items-center">
           <Button className="h-[38px]" disabled={amount === 0} onClick={() => onChange(amount - 1)}>
@@ -61,16 +41,11 @@ export default function VendingMachine() {
             className="block align-middle w-full mx-2"
             size="large"
             min={1}
-            max={vendingMachineDonatBalance || 0}
-            defaultValue={3}
+            max={data || 0}
             onChange={onChange}
             value={amount}
           />
-          <Button
-            className="h-[38px]"
-            disabled={amount >= vendingMachineDonatBalance}
-            onClick={() => onChange(amount + 1)}
-          >
+          <Button className="h-[38px]" disabled={amount >= data} onClick={() => onChange(amount + 1)}>
             +
           </Button>
         </div>
@@ -79,7 +54,7 @@ export default function VendingMachine() {
           size="large"
           type="primary"
           loading={isPurchaseProcessing}
-          disabled={amount === 0}
+          // disabled={amount === 0}
           onClick={handlePurchase}
         >
           Purchase

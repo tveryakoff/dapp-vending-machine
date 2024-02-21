@@ -2,6 +2,7 @@
 
 import { createContext, ReactNode, useEffect, useState } from 'react'
 import { Web3 } from 'web3'
+import web3 from '../../blockchain/provider'
 
 type Props = {
   children: ReactNode
@@ -15,13 +16,6 @@ type Web3ContextValue = {
 }
 
 export const Web3Context = createContext<Web3ContextValue>({ web3: null, connected: false, accounts: [] })
-
-let web3
-if (window?.ethereum) {
-  web3 = new Web3(window.ethereum)
-} else if (window?.web3) {
-  web3 = new Web3(window.web3.currentProvider)
-}
 
 const connect = async () => {
   console.log('here', window.ethereum)
@@ -50,6 +44,7 @@ export const Web3ContextProvider = ({ children }: Props) => {
   }, [web3])
 
   window?.ethereum.on('accountsChanged', (accounts) => {
+    console.log('accounts changes', accounts)
     setAccounts(accounts)
     setIsConnected(accounts?.length)
   })
