@@ -3,13 +3,13 @@
 import { Avatar, Badge, Button, Layout } from 'antd'
 import { memo, useContext } from 'react'
 import { Web3Context } from '../../../providers/Web3Provider'
-import { useMachineDonatAmount } from '../../../blockchain/vendingMachine/queries'
+import {useAddressDonutAmount, useMachineDonatAmount} from '../../../blockchain/vendingMachine/queries'
 
 const { Header: HeaderAntd } = Layout
 
 export const Header = memo(() => {
   const { handleConnect, connected } = useContext(Web3Context)
-  const { data: myDonutsAmount, isLoading } = useMachineDonatAmount()
+  const { data: myDonutsAmount, isLoading } = useAddressDonutAmount()
 
   return (
     <HeaderAntd className="flex justify-between items-center">

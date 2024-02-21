@@ -8,6 +8,8 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 import { vendingMachineContract } from './index'
+import { useContext } from 'react'
+import { Web3Context } from '../../providers/Web3Provider'
 
 export const QUERY_KEYS = {
   MACHINE_DONUT_AMOUNT: 'machineDonutAmount',
@@ -26,10 +28,11 @@ export const useMachineDonatAmount = () => {
   } as Options)
 }
 
-export const useAddressDonutAmount = (address: string) => {
+export const useAddressDonutAmount = () => {
+  const { accounts } = useContext(Web3Context)
   return useQuery({
-    queryKey: [address, QUERY_KEYS.ADDRESS_DONUT_AMOUNT],
-    queryFn: () => vendingMachineContract.getDonutAmountByAddress(address),
+    queryKey: [QUERY_KEYS.ADDRESS_DONUT_AMOUNT, accounts?.[0]],
+    queryFn: () => vendingMachineContract.getDonutAmountByAddress(accounts?.[0]),
     enabled: true,
   } as Options)
 }

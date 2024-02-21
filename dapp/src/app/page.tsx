@@ -54,7 +54,7 @@ export default function VendingMachine() {
           size="large"
           type="primary"
           loading={isPurchaseProcessing}
-          // disabled={amount === 0}
+          disabled={amount === 0}
           onClick={handlePurchase}
         >
           Purchase
