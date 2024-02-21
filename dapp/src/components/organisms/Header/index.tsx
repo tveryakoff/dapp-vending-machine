@@ -1,12 +1,15 @@
+'use client'
+
 import { Avatar, Badge, Button, Layout } from 'antd'
-import { memo, useCallback, useEffect, useState } from 'react'
-import { useWallet } from '../../../hooks/useWallet'
-import vendingMachineContract from '../../../../blockchain/vendingMachine'
+import { memo, useCallback, useContext, useEffect, useState } from 'react'
+import { Web3Context } from '../../../providers/Web3Provider'
+import { useVendingMachineContract } from '../../../hooks/useVendingMachineContract'
 
 const { Header: HeaderAntd } = Layout
 
 export const Header = memo(() => {
-  const { accounts, connect, connected } = useWallet()
+  const { accounts, handleConnect, connected } = useContext(Web3Context)
+  const vendingMachineContract = useVendingMachineContract()
 
   const [myDonutsAmount, setMyDonutsAmount] = useState(0)
 
@@ -29,7 +32,7 @@ export const Header = memo(() => {
           <Avatar shape="circle" size="large" src={'/13155-removebg-preview.png'} />
         </Badge>
       ) : (
-        <Button type="primary" onClick={connect}>
+        <Button type="primary" onClick={handleConnect}>
           Connect wallet
         </Button>
       )}
