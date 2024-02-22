@@ -1,6 +1,6 @@
 'use client'
 import { Contract, Web3 } from 'web3'
-import { CONTRACT_ADDRESS } from '../../../config'
+import { CONTRACT_ADDRESS, DONUT_PRICE } from '../../config'
 import vendingMachineAbi from '../../../../blockchain/build/contracts/VendingMachine.json'
 
 class VendingMachineContract {
@@ -46,7 +46,7 @@ class VendingMachineContract {
     try {
       return this.contract.methods.purchase(amount).send({
         from: address,
-        value: `${amount * 50}`,
+        value: `${amount * DONUT_PRICE}`,
       })
     } catch (e) {
       console.error('Purchase error!', e)
