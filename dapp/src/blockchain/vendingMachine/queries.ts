@@ -7,9 +7,8 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
-import { vendingMachineContract } from './index'
-import { useContext } from 'react'
-import { Web3Context } from '../../providers/Web3Provider'
+import { useAccounts } from '../hooks/useAccounts'
+import { useVendingMachine } from '../hooks/useVendingMachine'
 
 export const QUERY_KEYS = {
   MACHINE_DONUT_AMOUNT: 'machineDonutAmount',
@@ -21,27 +20,31 @@ type Options = UndefinedInitialDataOptions<unknown, DefaultError, unknown, Query
 type MutationOptions = UseMutationOptions<unknown, DefaultError, void, unknown>
 
 export const useMachineDonatAmount = () => {
+  const vendingMachineContract = useVendingMachine()
+  console.log('here', vendingMachineContract.enabled)
   return useQuery({
-    queryKey: [QUERY_KEYS.MACHINE_DONUT_AMOUNT],
+    queryKey: [QUERY_KEYS.MACHINE_DONUT_AMOUNT, vendingMachineContract.enabled],
     queryFn: () => vendingMachineContract.getMachineDonatAmount(),
     enabled: true,
   } as Options)
 }
 
 export const useAddressDonutAmount = () => {
-  const { accounts } = useContext(Web3Context)
+  const { accounts } = useAccounts()
+  const vendingMachineContract = useVendingMachine()
   return useQuery({
-    queryKey: [QUERY_KEYS.ADDRESS_DONUT_AMOUNT, accounts?.[0]],
-    queryFn: () => vendingMachineContract.getDonutAmountByAddress(accounts?.[0]),
+    queryKey: [QUERY_KEYS.ADDRESS_DONUT_AMOUNT, accounts, vendingMachineContract.enabled],
+    queryFn: () => vendingMachineContract?.getDonutAmountByAddress?.(accounts?.[0]),
     enabled: true,
   } as Options)
 }
 
 export const usePurchase = () => {
   const queryClient = useQueryClient()
+  const vendingMachineContract = useVendingMachine()
 
   return useMutation({
-    mutationFn: ({ address, amount }) => vendingMachineContract.purchase(address, amount),
+    mutationFn: ({ address, amount }) => vendingMachineContract?.purchase?.(address, amount),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MACHINE_DONUT_AMOUNT] })
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ADDRESS_DONUT_AMOUNT] })

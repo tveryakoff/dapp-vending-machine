@@ -1,14 +1,10 @@
-'use client'
 import './globals.css'
 import 'antd/dist/reset.css'
 import { ConfigProvider, Layout } from 'antd'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Header } from '../components/organisms/Header'
-import { Web3ContextProvider } from '../providers/Web3Provider'
-
-const { Content } = Layout
-
-const queryClient = new QueryClient()
+import { ReactQueryClientProvider } from '../components/providers/ReactQueryProvider'
+import { AntdRegistry } from '@ant-design/nextjs-registry'
+import { Content } from 'antd/es/layout/layout'
 
 export default function RootLayout({
   children,
@@ -19,14 +15,14 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ConfigProvider>
-          <Web3ContextProvider>
-            <QueryClientProvider client={queryClient}>
+          <ReactQueryClientProvider>
+            <AntdRegistry>
               <Layout>
                 <Header />
                 <Content className="min-h-[90vh]"> {children}</Content>
               </Layout>
-            </QueryClientProvider>
-          </Web3ContextProvider>
+            </AntdRegistry>
+          </ReactQueryClientProvider>
         </ConfigProvider>
       </body>
     </html>
