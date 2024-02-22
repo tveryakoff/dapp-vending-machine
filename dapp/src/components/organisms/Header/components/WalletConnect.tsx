@@ -8,7 +8,6 @@ import { memo } from 'react'
 export const WalletConnect = memo(() => {
   const { connected, connect } = useAccounts()
   const { data: myDonutsAmount, isLoading } = useAddressDonutAmount()
-  console.log('myDonutsAmount', myDonutsAmount)
 
   return (
     <>

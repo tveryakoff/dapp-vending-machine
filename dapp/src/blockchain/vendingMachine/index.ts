@@ -4,7 +4,7 @@ import { CONTRACT_ADDRESS } from '../../../config'
 import vendingMachineAbi from '../../../../blockchain/build/contracts/VendingMachine.json'
 
 class VendingMachineContract {
-  public readonly contract: Contract<any>
+  public readonly contract: Contract<vendingMachineAbi>
   public readonly enabled: boolean = false
   constructor(web3: Web3) {
     if (web3) {

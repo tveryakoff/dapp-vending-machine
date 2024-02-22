@@ -17,11 +17,10 @@ export const QUERY_KEYS = {
 
 type Options = UndefinedInitialDataOptions<unknown, DefaultError, unknown, QueryKey>
 
-type MutationOptions = UseMutationOptions<unknown, DefaultError, void, unknown>
+type MutationOptions = UseMutationOptions<{ address: string; amount: number }, DefaultError, void, unknown>
 
 export const useMachineDonatAmount = () => {
   const vendingMachineContract = useVendingMachine()
-  console.log('here', vendingMachineContract.enabled)
   return useQuery({
     queryKey: [QUERY_KEYS.MACHINE_DONUT_AMOUNT, vendingMachineContract.enabled],
     queryFn: () => vendingMachineContract.getMachineDonatAmount(),
@@ -32,9 +31,10 @@ export const useMachineDonatAmount = () => {
 export const useAddressDonutAmount = () => {
   const { accounts } = useAccounts()
   const vendingMachineContract = useVendingMachine()
+
   return useQuery({
     queryKey: [QUERY_KEYS.ADDRESS_DONUT_AMOUNT, accounts, vendingMachineContract.enabled],
-    queryFn: () => vendingMachineContract?.getDonutAmountByAddress?.(accounts?.[0]),
+    queryFn: () => vendingMachineContract.getDonutAmountByAddress(accounts?.[0]),
     enabled: true,
   } as Options)
 }
@@ -43,7 +43,7 @@ export const usePurchase = () => {
   const queryClient = useQueryClient()
   const vendingMachineContract = useVendingMachine()
 
-  return useMutation({
+  return useMutation<{ address: string; amount: number }>({
     mutationFn: ({ address, amount }) => vendingMachineContract?.purchase?.(address, amount),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MACHINE_DONUT_AMOUNT] })

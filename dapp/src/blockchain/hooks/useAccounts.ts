@@ -9,16 +9,15 @@ export const useAccounts = () => {
   useEffect(() => {
     if (web3?.eth) {
       web3.eth.getAccounts().then((res) => {
-        console.log('res', res)
         setAccounts(res)
-        setIsConnected(res?.length)
+        setIsConnected(!!res?.length)
       })
     }
   }, [web3])
 
   const handleAccountsChanged = useCallback((accList) => {
     setAccounts(accList)
-    setIsConnected(accList?.length)
+    setIsConnected(!!accList?.length)
   }, [])
 
   useEffect(() => {
