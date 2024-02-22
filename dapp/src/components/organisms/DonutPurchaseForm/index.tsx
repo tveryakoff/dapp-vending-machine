@@ -21,18 +21,18 @@ export const DonutPurchaseForm = memo(() => {
         Donuts supply: <span className="text-pink-500">{machineDonutAmount}</span>
       </h2>
       <div className="flex items-center">
-        <Button className="h-[38px]" disabled={amount === 0} onClick={() => setAmount(amount - 1)}>
+        <Button className="!h-[38px]" disabled={amount === 0} onClick={() => setAmount(amount - 1)}>
           -
         </Button>
         <InputNumber
-          className="block align-middle w-full mx-2"
+          className="block align-middle !w-full mx-2"
           size="large"
           min={1}
           max={machineDonutAmount || 0}
           onChange={setAmount}
           value={amount}
         />
-        <Button className="h-[38px]" disabled={amount >= machineDonutAmount} onClick={() => setAmount(amount + 1)}>
+        <Button className="!h-[38px]" disabled={amount >= machineDonutAmount} onClick={() => setAmount(amount + 1)}>
           +
         </Button>
       </div>

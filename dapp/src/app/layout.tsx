@@ -19,7 +19,7 @@ export default function RootLayout({
             <AntdRegistry>
               <Layout>
                 <Header />
-                <Content className="min-h-[90vh]"> {children}</Content>
+                <Content className="!min-h-[90vh]"> {children}</Content>
               </Layout>
             </AntdRegistry>
           </ReactQueryClientProvider>
